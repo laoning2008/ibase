@@ -7,7 +7,7 @@ namespace ibase
     namespace task
     {
         template<typename R>
-        R run_task_in_the_iocontext_sync(asio::io_context& io_context, std::function<R()> task)
+        inline R run_task_in_the_iocontext_sync(asio::io_context& io_context, std::function<R()> task)
         {
             if (io_context.get_executor().running_in_this_thread())
             {
@@ -25,7 +25,8 @@ namespace ibase
             return future.get();
         }
     
-        inline void run_task_in_the_iocontext_sync(asio::io_context& io_context, std::function<void()> task)
+        template<>
+        inline void run_task_in_the_iocontext_sync<void>(asio::io_context& io_context, std::function<void()> task)
         {
             if (io_context.get_executor().running_in_this_thread())
             {
@@ -42,6 +43,19 @@ namespace ibase
             });
             
             future.get();
+        }
+
+        inline void run_task_in_the_iocontext(asio::io_context& io_context, std::function<void()> task)
+        {
+            if (io_context.get_executor().running_in_this_thread())
+            {
+                task();
+                return;
+            }
+
+            io_context.post([task]() {
+                task();
+            });
         }
     
         inline void run_task_in_the_iocontext_async(asio::io_context& io_context, std::function<void()> task)

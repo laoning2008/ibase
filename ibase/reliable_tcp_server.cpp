@@ -56,7 +56,7 @@ namespace ibase
         started_ = false;
         
         std::weak_ptr<reliable_tcp_server_t> weak_this(shared_from_this());
-        ibase::task::run_task_in_the_iocontext_sync(io_context_, [weak_this]() {
+        ibase::task::run_task_in_the_iocontext_sync<void>(io_context_, [weak_this]() {
             auto shared_this = weak_this.lock();
             if (!shared_this)
             {
@@ -85,7 +85,7 @@ namespace ibase
     void reliable_tcp_server_t::register_req_processor(uint32_t cmd, req_processor_t processor)
     {
         std::weak_ptr<reliable_tcp_server_t> weak_this(shared_from_this());
-        ibase::task::run_task_in_the_iocontext_sync(io_context_, [weak_this, cmd, processor]() {
+        ibase::task::run_task_in_the_iocontext_sync<void>(io_context_, [weak_this, cmd, processor]() {
             auto shared_this = weak_this.lock();
             if (!shared_this)
             {
@@ -104,7 +104,7 @@ namespace ibase
     void reliable_tcp_server_t::unregister_req_processor(uint32_t cmd)
     {
         std::weak_ptr<reliable_tcp_server_t> weak_this(shared_from_this());
-        ibase::task::run_task_in_the_iocontext_sync(io_context_, [weak_this, cmd]() {
+        ibase::task::run_task_in_the_iocontext_sync<void>(io_context_, [weak_this, cmd]() {
             auto shared_this = weak_this.lock();
             if (!shared_this)
             {

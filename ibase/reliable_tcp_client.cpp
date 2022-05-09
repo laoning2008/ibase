@@ -59,7 +59,7 @@ namespace ibase
         started_ = false;
         
         std::weak_ptr<reliable_tcp_client_t> weak_this(shared_from_this());
-        ibase::task::run_task_in_the_iocontext_sync(io_context_, [weak_this]() {
+        ibase::task::run_task_in_the_iocontext_sync<void>(io_context_, [weak_this]() {
             auto shared_this = weak_this.lock();
             if (!shared_this)
             {
