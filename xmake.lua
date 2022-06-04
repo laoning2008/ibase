@@ -3,11 +3,15 @@ set_languages("c99", "c++17")
 add_rules("mode.debug", "mode.release")
 
 add_requires("asio")
--- add_requires("fmt")
 add_requires("spdlog")
 add_requires("fmt", {configs = {header_only=true}})
 
-add_defines("_WIN32_WINNT=0x0501")
+
+if is_plat("linux", "android", "ios", "macos") then
+    add_syslinks("pthread", "dl", "m", "c")
+else    
+    add_defines("_WIN32_WINNT=0x0501")
+end
 
 target("ibase")
     set_kind("static")
